@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Store — أذكى متجر إلكتروني</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #FF4500;
+    --primary-dark: #cc3700;
+    --secondary: #FF8C00;
+    --bg: #0a0a0f;
+    --card-bg: #13131a;
+    --card-border: #1e1e2e;
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --accent: #FFD700;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a0a00 100%);
+    border-bottom: 2px solid var(--primary);
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header-links {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .tg-btn {
+    background: linear-gradient(135deg, #2AABEE, #1a8dc7);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a0800 50%, #0a0a0f 100%);
+    padding: 50px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, rgba(255,69,0,0.1) 0%, transparent 60%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  /* CATEGORIES */
+  .categories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 16px 20px;
+    scrollbar-width: none;
+  }
+
+  .categories::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    flex-shrink: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .cat-btn.active, .cat-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+
+  /* PRODUCTS GRID */
+  .section-title {
+    padding: 20px 20px 10px;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 12px 20px;
+  }
+
+  .product-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(255,69,0,0.2);
+    border-color: var(--primary);
+  }
+
+  .product-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: #1a1a2e;
+  }
+
+  .product-img-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #1a1a2e, #0d0d1a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+  }
+
+  .product-info {
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .product-badge {
+    display: inline-block;
+    background: rgba(255,69,0,0.15);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    width: fit-content;
+  }
+
+  .product-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .product-price {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--primary);
+  }
+
+  .product-old-price {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+
+  .product-coupon {
+    background: rgba(255,215,0,0.1);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  .buy-btn {
+    display: block;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .buy-btn:hover { opacity: 0.9; }
+
+  /* COUPONS SECTION */
+  .coupons-section {
+    margin: 10px 12px 20px;
+    background: linear-gradient(135deg, #1a0800, #0d0d1a);
+    border: 1px solid var(--primary);
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .coupons-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .coupons-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .coupon-item {
+    background: rgba(255,69,0,0.1);
+    border: 1px solid rgba(255,69,0,0.3);
+    border-radius: 10px;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .coupon-item:hover, .coupon-item.copied {
+    background: rgba(255,69,0,0.25);
+    border-color: var(--primary);
+  }
+
+  .coupon-code {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--primary);
+    font-family: monospace;
+    letter-spacing: 1px;
+  }
+
+  .coupon-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .coupon-copy {
+    font-size: 10px;
+    color: var(--accent);
+    margin-top: 4px;
+  }
+
+  /* TELEGRAM BANNER */
+  .tg-banner {
+    margin: 0 12px 20px;
+    background: linear-gradient(135deg, #1a1a2e, #0a0a1a);
+    border: 1px solid #2AABEE44;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .tg-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #2AABEE, #1a8dc7);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .tg-info h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2AABEE;
+  }
+
+  .tg-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--card-bg);
+    border-top: 1px solid var(--card-border);
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: transform 0.3s;
+    z-index: 999;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .discount-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 6px;
+  }
+
+  .img-wrapper { position: relative; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="#" class="logo">
+    <div class="logo-icon">🛍️</div>
+    <span class="logo-text">Smart Store</span>
+  </a>
+  <div class="header-links">
+    <a href="http://t.me/smart_store06" class="tg-btn" target="_blank">
+      ✈️ القناة
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🔥 تخفيضات الصيف 2026</div>
+  <h1>أفضل العروض<br>بأقل الأسعار</h1>
+  <p>منتجات مختارة بعناية من AliExpress<br>مع كوبونات خصم حصرية</p>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <button class="cat-btn active" onclick="filterCat('all')">🌟 الكل</button>
+  <button class="cat-btn" onclick="filterCat('phones')">📱 هواتف</button>
+  <button class="cat-btn" onclick="filterCat('watches')">⌚ ساعات</button>
+  <button class="cat-btn" onclick="filterCat('earbuds')">🎧 سماعات</button>
+  <button class="cat-btn" onclick="filterCat('gaming')">🎮 ألعاب</button>
+  <button class="cat-btn" onclick="filterCat('pc')">💻 كمبيوتر</button>
+</div>
+
+<!-- COUPONS -->
+<div class="coupons-section">
+  <div class="coupons-title">🏷️ كوبونات الخصم — اضغط للنسخ</div>
+  <div class="coupons-grid">
+    <div class="coupon-item" onclick="copyCoupon('AFSO3')">
+      <div class="coupon-code">AFSO3</div>
+      <div class="coupon-desc">خصم $3 عند $15+</div>
+      <div class="coupon-copy">اضغط للنسخ 📋</div>
+    </div>
+    <div class="coupon-item" onclick="copyCoupon('AFSO6')">
+      <div class="coupon-code">AFSO6</div>
+      <div class="coupon-desc">خصم $6 عند $39+</div>
+      <div class="coupon-copy">اضغط للنسخ 📋</div>
+    </div>
+    <div class="coupon-item" onclick="copyCoupon('AFSO10')">
+      <div class="coupon-code">AFSO10</div>
+      <div class="coupon-desc">خصم $10 عند $69+</div>
+      <div class="coupon-copy">اضغط للنسخ 📋</div>
+    </div>
+    <div class="coupon-item" onclick="copyCoupon('AFSO15')">
+      <div class="coupon-code">AFSO15</div>
+      <div class="coupon-desc">خصم $15 عند $99+</div>
+      <div class="coupon-copy">اضغط للنسخ 📋</div>
+    </div>
+    <div class="coupon-item" onclick="copyCoupon('AFSO24')">
+      <div class="coupon-code">AFSO24</div>
+      <div class="coupon-desc">خصم $24 عند $169+</div>
+      <div class="coupon-copy">اضغط للنسخ 📋</div>
+    </div>
+    <div class="coupon-item" onclick="copyCoupon('AFSO40')">
+      <div class="coupon-code">AFSO40</div>
+      <div class="coupon-desc">خصم $40 عند $279+</div>
+      <div class="coupon-copy">اضغط للنسخ 📋</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section-title">🛍️ أحدث العروض</div>
+<div class="products-grid" id="productsGrid">
+
+  <!-- منتج 1 -->
+  <a class="product-card" href="https://www.aliexpress.com" target="_blank" data-cat="phones">
+    <div class="img-wrapper">
+      <div class="product-img-placeholder">📱</div>
+      <span class="discount-badge">-35%</span>
+    </div>
+    <div class="product-info">
+      <span class="product-badge">📱 هاتف</span>
+      <div class="product-name">Xiaomi Redmi Note 14 Pro 5G Global</div>
+      <div>
+        <span class="product-price">$189</span>
+        <span class="product-old-price"> $289</span>
+      </div>
+      <div class="product-coupon">🏷️ كوبون: AFSO24 — وفّر $24</div>
+    </div>
+    <span class="buy-btn">🛒 اشتري الآن</span>
+  </a>
+
+  <!-- منتج 2 -->
+  <a class="product-card" href="https://www.aliexpress.com" target="_blank" data-cat="watches">
+    <div class="img-wrapper">
+      <div class="product-img-placeholder">⌚</div>
+      <span class="discount-badge">-47%</span>
+    </div>
+    <div class="product-info">
+      <span class="product-badge">⌚ ساعة</span>
+      <div class="product-name">Amazfit GTR 4 Smartwatch GPS</div>
+      <div>
+        <span class="product-price">$79</span>
+        <span class="product-old-price"> $149</span>
+      </div>
+      <div class="product-coupon">🏷️ كوبون: AFSO10 — وفّر $10</div>
+    </div>
+    <span class="buy-btn">🛒 اشتري الآن</span>
+  </a>
+
+  <!-- منتج 3 -->
+  <a class="product-card" href="https://www.aliexpress.com" target="_blank" data-cat="earbuds">
+    <div class="img-wrapper">
+      <div class="product-img-placeholder">🎧</div>
+      <span class="discount-badge">-45%</span>
+    </div>
+    <div class="product-info">
+      <span class="product-badge">🎧 سماعة</span>
+      <div class="product-name">Anker Soundcore A40i TWS Earbuds</div>
+      <div>
+        <span class="product-price">$49</span>
+        <span class="product-old-price"> $89</span>
+      </div>
+      <div class="product-coupon">🏷️ كوبون: AFSO6 — وفّر $6</div>
+    </div>
+    <span class="buy-btn">🛒 اشتري الآن</span>
+  </a>
+
+  <!-- منتج 4 -->
+  <a class="product-card" href="https://www.aliexpress.com" target="_blank" data-cat="gaming">
+    <div class="img-wrapper">
+      <div class="product-img-placeholder">🎮</div>
+      <span class="discount-badge">-43%</span>
+    </div>
+    <div class="product-info">
+      <span class="product-badge">🎮 ألعاب</span>
+      <div class="product-name">GameSir G7 Pro Wired Controller</div>
+      <div>
+        <span class="product-price">$45</span>
+        <span class="product-old-price"> $79</span>
+      </div>
+      <div class="product-coupon">🏷️ كوبون: AFSO6 — وفّر $6</div>
+    </div>
+    <span class="buy-btn">🛒 اشتري الآن</span>
+  </a>
+
+  <!-- منتج 5 -->
+  <a class="product-card" href="https://www.aliexpress.com" target="_blank" data-cat="pc">
+    <div class="img-wrapper">
+      <div class="product-img-placeholder">💾</div>
+      <span class="discount-badge">-38%</span>
+    </div>
+    <div class="product-info">
+      <span class="product-badge">💾 SSD</span>
+      <div class="product-name">Kingston NV3 1TB NVMe M.2 SSD</div>
+      <div>
+        <span class="product-price">$55</span>
+        <span class="product-old-price"> $89</span>
+      </div>
+      <div class="product-coupon">🏷️ كوبون: AFSO6 — وفّر $6</div>
+    </div>
+    <span class="buy-btn">🛒 اشتري الآن</span>
+  </a>
+
+  <!-- منتج 6 -->
+  <a class="product-card" href="https://www.aliexpress.com" target="_blank" data-cat="phones">
+    <div class="img-wrapper">
+      <div class="product-img-placeholder">📱</div>
+      <span class="discount-badge">-30%</span>
+    </div>
+    <div class="product-info">
+      <span class="product-badge">📱 هاتف</span>
+      <div class="product-name">HONOR X9d Global 12GB 256GB 5G</div>
+      <div>
+        <span class="product-price">$249</span>
+        <span class="product-old-price"> $349</span>
+      </div>
+      <div class="product-coupon">🏷️ كوبون: AFSO24 — وفّر $24</div>
+    </div>
+    <span class="buy-btn">🛒 اشتري الآن</span>
+  </a>
+
+</div>
+
+<!-- TELEGRAM BANNER -->
+<a href="http://t.me/smart_store06" class="tg-banner" target="_blank">
+  <div class="tg-icon">✈️</div>
+  <div class="tg-info">
+    <h3>تابع قناتنا على تيليغرام</h3>
+    <p>عروض يومية وكوبونات حصرية — @smart_store06</p>
+  </div>
+</a>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Smart Store — جميع الروابط هي روابط Affiliate</p>
+  <p style="margin-top:6px">الأسعار قابلة للتغيير حسب AliExpress</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ تم نسخ الكوبون!</div>
+
+<script>
+  function copyCoupon(code) {
+    navigator.clipboard.writeText(code).then(() => {
+      const toast = document.getElementById('toast');
+      toast.textContent = '✅ تم نسخ: ' + code;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    });
+  }
+
+  function filterCat(cat) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
